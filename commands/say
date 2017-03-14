@@ -1,0 +1,8 @@
+#!/bin/bash
+
+file="/tmp/say.mp3"
+/usr/local/bin/pi text2audio $1 > $file
+`pi vol 40`
+/usr/local/bin/pi play $file > /dev/null
+`pi vol 30`
+rm -rf $file

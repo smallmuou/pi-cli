@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+
+import json
+import sys
+from optparse import OptionParser
+
+parser = OptionParser(usage="%prog [option] json key")
+parser.parse_args()
+
+
+if len(sys.argv) != 3:
+    parser.print_help()
+    sys.exit()
+
+obj = json.loads(sys.argv[1])
+print obj[sys.argv[2]]
+

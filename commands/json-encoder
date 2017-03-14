@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+jo $@
+
+#import json
+#import sys
+#from optparse import OptionParser
+#
+#parser = OptionParser(usage="%prog [option] key=value ... ")
+#parser.parse_args()
+#
+#result = {}
+#for keyvalue in sys.argv[1:]:
+#    a = keyvalue.split('=')
+#    result[a[0]]=a[1]
+#
+#print result

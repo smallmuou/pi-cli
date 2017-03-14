@@ -1,0 +1,32 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import sys
+import urllib2
+import json
+import socket
+import os
+
+socket.setdefaulttimeout(10)
+
+cuid = os.environ['BAIDU_YUYIN_CUID']
+apiKey = os.environ['BAIDU_YUYIN_API_KEY']
+secretKey = os.environ['BAIDU_YUYIN_SECRET_KEY']
+auth_url = "https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id="+apiKey+"&client_secret="+secretKey
+
+
+request = urllib2.Request(auth_url)
+response = urllib2.urlopen(request).read()
+if (response):
+	access_token = json.loads(response)['access_token']	
+
+text = sys.argv[1]
+text = urllib2.quote(text)
+text_url = "http://tsn.baidu.com/text2audio?tex="+text+"&lan=zh&cuid="+cuid+"&ctp=1&vol=9&per=0&tok="+access_token
+request = urllib2.Request(text_url)
+request.add_header('Content-Type','application/json')
+response = urllib2.urlopen(request).read()
+
+print response
+
+
