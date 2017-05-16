@@ -12,10 +12,7 @@ import time
 parser = OptionParser(usage="%prog [option] expires(s)")
 parser.parse_args()
 
-if len(sys.argv) == 1:
-	expires=3600
-else:
-	expires=int(sys.argv[1])
+url=sys.argv[1]
 
 access_key = os.environ["QINIU_ACCESS_KEY"]
 secret_key = os.environ["QINIU_SECRET_KEY"]
@@ -23,4 +20,4 @@ q = Auth(access_key, secret_key)
 bucket = os.environ["QINIU_BUCKET"]
 
 # please get time first to ensure expire time valid
-print "%d|%s" % (int(time.time())+expires, q.upload_token(bucket, expires=expires))
+print "%s" % (q.token_of_request(url))

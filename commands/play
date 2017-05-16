@@ -1,8 +1,0 @@
-#!/bin/bash
-
-file=$1
-
-hw=`aplay -l|awk '/hifiberry/{print $2"."$6}'|sed 's/://g'`
-#mplayer -ao alsa:device=hw=$hw $file 2&1>/dev/null
-
-curl -s -X POST --header "content-type:application/json" --data "{\"jsonrpc\": \"2.0\", \"method\": \"Player.Open\", \"params\":{\"item\": {\"file\": \"$file\"}}, \"id\" : \"1\"}" http://localhost:8080/jsonrpc

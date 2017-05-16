@@ -1,0 +1,9 @@
+#!/bin/bash
+
+source /etc/profile.d/robot.sh
+
+access_token=`curl -s "https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=$BAIDU_YUYIN_API_KEY&client_secret=$BAIDU_YUYIN_SECRET_KEY"|jshon -e access_token|sed 's/"//g'`
+
+txt=`echo -n "$@"|sed 's/ /\%20/g'`
+
+curl  -s "http://tsn.baidu.com/text2audio?tex=$txt&lan=zh&cuid=$BAIDU_YUYIN_CUID&ctp=1&vol=9&per=0&tok=$access_token"

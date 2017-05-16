@@ -9,18 +9,26 @@ import sys
 from optparse import OptionParser
 import time
 
-parser = OptionParser(usage="%prog [option] expires(s)")
+parser = OptionParser(usage="%prog [option] file")
 parser.parse_args()
 
-if len(sys.argv) == 1:
-	expires=3600
-else:
-	expires=int(sys.argv[1])
+if (len(sys.argv) != 2):
+    parser.print_usage()
+
+file = sys.argv[1]
+os.system('source /etc/profile.d/robot.sh')
 
 access_key = os.environ["QINIU_ACCESS_KEY"]
 secret_key = os.environ["QINIU_SECRET_KEY"]
 q = Auth(access_key, secret_key)
 bucket = os.environ["QINIU_BUCKET"]
 
-# please get time first to ensure expire time valid
-print "%d|%s" % (int(time.time())+expires, q.upload_token(bucket, expires=expires))
+token = q.upload_token(bucket, expires=3600)
+try:
+    key = os.path.basename(file)
+    ret,info = put_file(token, key, file)
+    print "%s/%s" % ( os.environ["QINIU_HOST"], key)
+except:
+    print ""
+
+

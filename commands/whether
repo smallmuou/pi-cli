@@ -54,41 +54,45 @@ current_dir() {
 usage() {
 cat << EOF
 
-USAGE: $0 [-h] content
+USAGE: $0 [-h] city
 
 DESCRIPTION:
+
+return whether info
 
 OPTIONS:
     -h                Show this help message and exit
 
 EOF
+exit
 }
 
 while getopts 'h' arg; do
     case $arg in
         h)
-            usage
-            exit;;
+            usage;;
         ?)
-            usage
-            exit;;
+            usage;;
     esac
 done
 
 shift $(($OPTIND - 1))
 
-if [ $# != 1 ];then
-    usage
-    exit
-fi
-
 source /etc/profile.d/robot.sh
 
-db=$ROBOT_DB_PATH
-tokens=`sqlite3 $db "select push_token from user"`
+city=$HEWHETHER_CITY
 
-for token in $tokens
-do
-    pi push $token $1
-done
+whether=`curl -s "https://free-api.heweather.com/v5/now?city=$city&key=$HEWHETHER_KEY"|jshon -e HeWeather5 -e 0 -e now`
+cond=`echo $whether|jshon -e cond -e txt|sed 's/"//g'`
+tmp=`echo $whether|jshon -e tmp|sed 's/"//g'`
+suggestion=`curl -s "https://free-api.heweather.com/v5/suggestion?city=$city&key=$HEWHETHER_KEY"|jshon -e HeWeather5 -e 0 -e suggestion`
+comf=`echo -n $suggestion|jshon -e comf -e txt|sed 's/"//g'`
+drsg=`echo -n $suggestion|jshon -e drsg -e txt|sed 's/"//g'`
+flu=`echo -n $suggestion|jshon -e flu -e txt|sed 's/"//g'`
+sport=`echo -n $suggestion|jshon -e sport -e txt|sed 's/"//g'`
+trav=`echo -n $suggestion|jshon -e trav -e txt|sed 's/"//g'`
+uv=`echo -n $suggestion|jshon -e uv -e txt|sed 's/"//g'`
+week=`date +星期%w|sed 'y/12345670/一二三四五六日日/'`
+echo "今天是`date +%Y年%-m月%-d号`$week $cond $tmp摄氏度 舒适度指数:$comf 穿衣指数:$drsg 感冒指数:$flu 运动指数:$sport 出行指数:$trav 紫外线指数:$uv"
+
 

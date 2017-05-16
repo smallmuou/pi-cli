@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+jshon -e $@ | sed 's/"//g'
+
